@@ -135,7 +135,7 @@ class DensityCalc(object):
 
         Usage:
             dc = DensityCalc('path/to/netcdf_file.nc')
-            x, y, z = dc.kde(<tx>, <ty>, <tick_size>)
+            x, y, z = dc.kde(<tx>, <ty>, <grid_size>)
         '''
         try:
             bounds = (np.amin(tx),np.amin(ty),np.amax(tx),np.amax(ty))
@@ -155,14 +155,14 @@ class DensityCalc(object):
 
             ## suggested to only use these when absolutly certain.
             ## default is scotts_factor: power(self.n, -1./(self.d+4))
-            #kernel.covariance_factor = lambda: num * pow(num, -1./(6))
+            #kernel.covariance_factor = lambda: .337
             #kernel._compute_covariance()
 
             z = np.reshape(kernel(positions).T, x.shape) **grid_size
 
             ##Scale the data to between 0-1, while preserving ratio
             old_range = (z.max() - z.min())
-            new_range = (1 - 0)
+            new_range = (100 - 0)
             z_scaled = (((z - z.min()) * new_range) / old_range) + 0
 
             tuple_return = (x,y,z_scaled)
