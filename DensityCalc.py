@@ -158,11 +158,11 @@ class DensityCalc(object):
             #kernel.covariance_factor = lambda: .337
             #kernel._compute_covariance()
 
-            z = np.reshape(kernel(positions).T, x.shape) **grid_size
+            z = np.reshape(kernel(positions).T, x.shape)*pow(grid_size,2)
 
             ##Scale the data to between 0-1, while preserving ratio
             old_range = (z.max() - z.min())
-            new_range = (100 - 0)
+            new_range = (1 - 0)
             z_scaled = (((z - z.min()) * new_range) / old_range) + 0
 
             tuple_return = (x,y,z_scaled)
