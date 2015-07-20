@@ -19,17 +19,17 @@ import netCDF4
 import copy
 import datetime
 import logging
+import resource
 
 class DensityCalc(object):
     # setup containers
     tx = []
     ty = []
 
-    GRID_SIZE = 9500
+    GRID_SIZE   = 9500
 
     def __init__(self):
         object.__init__(self)
-
 
     def from_ncdf(self, ncdf_file):
         '''
@@ -85,7 +85,8 @@ class DensityCalc(object):
         nc_file_out = netCDF4.Dataset(ncdf_file,'w', format='NETCDF4')
 
         try:
-            nc_file_out.history = "Created on: %s " % datetime.datetime.now()
+            nc_file_out.history = "Created on: %s" % datetime.datetime.now()
+            nc_file_out.Conventions = 'CF-1.0'
 
             # create the dimentions for the variables
             nc_file_out.createDimension('y' ,y.shape[1])
@@ -94,18 +95,18 @@ class DensityCalc(object):
             # create the variables themselves
             lats = nc_file_out.createVariable('y','d',('y'))
             lons = nc_file_out.createVariable('x','d',('x'))
-            data = nc_file_out.createVariable('density','f8', ('x','y'))
+            data = nc_file_out.createVariable('density','f', ('x','y'))
 
             # define some meta data
-            lats.units = 'Meters'
+            lats.units = 'Meter'
             lats.standard_name = "projection_y_coordinate"
             lats.long_name = "y coordinate of projection"
 
-            lons.units = 'Meters'
+            lons.units = 'Meter'
             lons.standard_name = "projection_x_coordinate"
             lons.long_name = "x coordinate of projection"
 
-            data.units = 'percent'
+            data.units = 'Probability'
             data.grid_mapping = 'albers_conical_equal_area'
             data.coordinates = 'x y'
 
